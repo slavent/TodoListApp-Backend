@@ -30,6 +30,6 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column
+    @Column(name="avatarurl")
     private String avatarUrl;
 }

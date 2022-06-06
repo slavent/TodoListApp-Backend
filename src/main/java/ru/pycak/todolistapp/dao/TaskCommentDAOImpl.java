@@ -1,35 +1,37 @@
 package ru.pycak.todolistapp.dao;
 
-import org.hibernate.SessionFactory;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.pycak.todolistapp.entity.TaskComment;
 
+import javax.persistence.EntityManager;
+
 @Repository
 public class TaskCommentDAOImpl implements TaskCommentDAO {
 
-    private final SessionFactory sessionFactory;
+    private final EntityManager entityManager;
 
     @Autowired
-    public TaskCommentDAOImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public TaskCommentDAOImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public void save(TaskComment comment) {
-        sessionFactory.getCurrentSession()
+        entityManager.unwrap(Session.class)
                 .saveOrUpdate(comment);
     }
 
     @Override
     public TaskComment get(Long id) {
-        return sessionFactory.getCurrentSession()
+        return entityManager.unwrap(Session.class)
                 .get(TaskComment.class, id);
     }
 
     @Override
     public void remove(Long id) {
-        sessionFactory.getCurrentSession()
+        entityManager.unwrap(Session.class)
                 .createQuery("delete from TaskComment where id=:taskCommentId")
                 .setParameter("taskCommentId", id)
                 .executeUpdate();
