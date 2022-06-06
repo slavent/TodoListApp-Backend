@@ -1,31 +1,32 @@
 package ru.pycak.todolistapp.dao;
 
-import org.hibernate.SessionFactory;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.pycak.todolistapp.entity.Task;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
 public class TaskDAOImpl implements TaskDAO {
 
-    private final SessionFactory sessionFactory;
+    private final EntityManager entityManager;
 
     @Autowired
-    public TaskDAOImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public TaskDAOImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public void save(Task task) {
-        sessionFactory.getCurrentSession()
+        entityManager.unwrap(Session.class)
                 .saveOrUpdate(task);
     }
 
     @Override
     public List<Task> getTasksByUser(Long id) {
-        return sessionFactory.getCurrentSession()
+        return entityManager.unwrap(Session.class)
                 .createQuery("from Task where user.id=:userId", Task.class)
                 .setParameter("userId", id)
                 .getResultList();
@@ -33,13 +34,13 @@ public class TaskDAOImpl implements TaskDAO {
 
     @Override
     public Task get(Long id) {
-        return sessionFactory.getCurrentSession()
+        return entityManager.unwrap(Session.class)
                 .get(Task.class, id);
     }
 
     @Override
     public void remove(Long id) {
-        sessionFactory.getCurrentSession()
+        entityManager.unwrap(Session.class)
                 .createQuery("delete from Task where id=:taskId")
                 .setParameter("taskId", id)
                 .executeUpdate();
