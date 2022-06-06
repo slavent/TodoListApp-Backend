@@ -1,5 +1,7 @@
 package ru.pycak.todolistapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,25 +21,28 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name="taskid")
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String title;
 
-    @Column
+    @Column(nullable = false)
     private String description;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date creationDate;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date editDate;
 
+    @JsonIgnore
     @ManyToOne(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE,
@@ -46,6 +51,9 @@ public class Task {
     })
     @JoinColumn(name = "userid")
     private User user;
+
+    @Column(name = "userid", insertable = false, updatable = false)
+    private Long userId;
 
     @ManyToOne(cascade = {
             CascadeType.PERSIST,
@@ -56,6 +64,6 @@ public class Task {
     @JoinColumn(name = "statusid")
     private TaskStatus status;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TaskComment> comments;
 }

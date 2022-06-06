@@ -2,14 +2,25 @@ package ru.pycak.todolistapp.dao;
 
 import ru.pycak.todolistapp.entity.User;
 
-import java.util.List;
-
 public interface UserDAO {
-    public List<User> getAll();
 
+    /**
+     * Save User or update if one already exists in database
+     *
+     * @param user User instance
+     */
     public void save(User user);
 
-    public User get(int id);
+    /**
+     * @param id User unique identifier
+     * @return User instance
+     */
+    public User get(Long id);
 
-    public void delete(int id);
+    /**
+     * Remove User from database by its identifier
+     *
+     * @param id User unique identifier
+     */
+    public void remove(Long id);
 }
