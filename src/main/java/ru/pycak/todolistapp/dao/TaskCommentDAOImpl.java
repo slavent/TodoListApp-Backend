@@ -1,6 +1,5 @@
 package ru.pycak.todolistapp.dao;
 
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.pycak.todolistapp.entity.TaskComment;
@@ -19,19 +18,17 @@ public class TaskCommentDAOImpl implements TaskCommentDAO {
 
     @Override
     public void save(TaskComment comment) {
-        entityManager.unwrap(Session.class)
-                .saveOrUpdate(comment);
+        entityManager.merge(comment);
     }
 
     @Override
     public TaskComment get(Long id) {
-        return entityManager.unwrap(Session.class)
-                .get(TaskComment.class, id);
+        return entityManager.find(TaskComment.class, id);
     }
 
     @Override
     public void remove(Long id) {
-        entityManager.unwrap(Session.class)
+        entityManager
                 .createQuery("delete from TaskComment where id=:taskCommentId")
                 .setParameter("taskCommentId", id)
                 .executeUpdate();

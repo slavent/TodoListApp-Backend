@@ -1,6 +1,5 @@
 package ru.pycak.todolistapp.dao;
 
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.pycak.todolistapp.entity.Task;
@@ -20,13 +19,12 @@ public class TaskDAOImpl implements TaskDAO {
 
     @Override
     public void save(Task task) {
-        entityManager.unwrap(Session.class)
-                .saveOrUpdate(task);
+        entityManager.merge(task);
     }
 
     @Override
     public List<Task> getTasksByUser(Long id) {
-        return entityManager.unwrap(Session.class)
+        return entityManager
                 .createQuery("from Task where user.id=:userId", Task.class)
                 .setParameter("userId", id)
                 .getResultList();
@@ -34,13 +32,12 @@ public class TaskDAOImpl implements TaskDAO {
 
     @Override
     public Task get(Long id) {
-        return entityManager.unwrap(Session.class)
-                .get(Task.class, id);
+        return entityManager.find(Task.class, id);
     }
 
     @Override
     public void remove(Long id) {
-        entityManager.unwrap(Session.class)
+        entityManager
                 .createQuery("delete from Task where id=:taskId")
                 .setParameter("taskId", id)
                 .executeUpdate();
