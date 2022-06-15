@@ -1,9 +1,14 @@
 package ru.pycak.todolistapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name="taskcomments")
@@ -21,23 +26,19 @@ public class TaskComment {
     @Column
     private String text;
 
-    @JsonIgnore
-    @ManyToOne(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REMOVE,
-            CascadeType.DETACH
-    })
-    @JoinColumn(name = "taskid")
-    private Task task;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date creationDate;
 
-    @JsonIgnore
-    @ManyToOne(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REMOVE,
-            CascadeType.DETACH
-    })
-    @JoinColumn(name = "userid")
-    private User user;
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
+    private Date editDate;
+
+    @Column(name = "taskid")
+    private Long taskId;
+
+    @Column(name = "userid")
+    private Long userId;
 }

@@ -23,4 +23,10 @@ public interface UserDAO {
      * @param id User unique identifier
      */
     public void remove(Long id);
+
+    /**
+     * @param email Email string
+     * @return First User with given email, or null.
+     */
+    public User findByEmail(String email);
 }

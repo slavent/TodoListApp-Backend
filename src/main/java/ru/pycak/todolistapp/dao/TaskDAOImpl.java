@@ -36,6 +36,17 @@ public class TaskDAOImpl implements TaskDAO {
     }
 
     @Override
+    public Task findByIdAndUserId(Long taskId, Long userId) {
+        return entityManager
+                .createQuery("from Task where id=:taskId and user.id=:userId", Task.class)
+                .setParameter("taskId", taskId)
+                .setParameter("userId", userId)
+                .getResultStream()
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
     public void remove(Long id) {
         entityManager
                 .createQuery("delete from Task where id=:taskId")

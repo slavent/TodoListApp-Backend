@@ -27,6 +27,19 @@ public class TaskCommentDAOImpl implements TaskCommentDAO {
     }
 
     @Override
+    public TaskComment findByIdAndTaskIdAndUserId(Long commentId, Long taskId, Long userId) {
+        return entityManager
+                .createQuery("from TaskComment where id=:commentId " +
+                        "and userId=:userId and taskId=:taskId", TaskComment.class)
+                .setParameter("commentId", commentId)
+                .setParameter("userId", userId)
+                .setParameter("taskId", taskId)
+                .getResultStream()
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
     public void remove(Long id) {
         entityManager
                 .createQuery("delete from TaskComment where id=:taskCommentId")

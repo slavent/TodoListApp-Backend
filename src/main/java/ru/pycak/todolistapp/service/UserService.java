@@ -1,6 +1,7 @@
 package ru.pycak.todolistapp.service;
 
-import ru.pycak.todolistapp.entity.User;
+import ru.pycak.todolistapp.dto.CreateUserDTO;
+import ru.pycak.todolistapp.dto.UserDTO;
 
 public interface UserService {
 
@@ -10,21 +11,22 @@ public interface UserService {
      * @param id User unique identifier
      * @return User instance
      */
-    public User getUser(Long id);
+    public UserDTO getUser(Long id);
 
     /**
      * Update user if one already exists
      *
-     * @param user User instance
+     * @param user UserDTO instance
      */
-    public void update(User user);
+    public void update(UserDTO user);
 
     /**
      * Add new User instance to database
      *
-     * @param user User instance without id parameter
+     * @param createUserDTO New user DTO
+     * @return Created User instance
      */
-    public void create(User user);
+    public UserDTO createUser(CreateUserDTO createUserDTO);
 
     /**
      * Remove user by id
