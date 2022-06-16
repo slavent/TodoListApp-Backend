@@ -13,6 +13,8 @@ public interface UserService {
      */
     public UserDTO getUser(Long id);
 
+    public UserDTO getUserByEmail(String email);
+
     /**
      * Update user if one already exists
      *

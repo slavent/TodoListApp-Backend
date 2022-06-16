@@ -1,6 +1,6 @@
 package ru.pycak.todolistapp.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.pycak.todolistapp.dao.TaskCommentDAO;
 import ru.pycak.todolistapp.dto.CreateTaskCommentDTO;
@@ -11,19 +11,11 @@ import ru.pycak.todolistapp.utils.MappingUtils;
 import javax.transaction.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class TaskCommentServiceImpl implements TaskCommentService {
 
     private final MappingUtils mappingUtils;
     private final TaskCommentDAO taskCommentDAO;
-
-    @Autowired
-    public TaskCommentServiceImpl(
-            MappingUtils mappingUtils,
-            TaskCommentDAO taskCommentDAO
-    ) {
-        this.mappingUtils = mappingUtils;
-        this.taskCommentDAO = taskCommentDAO;
-    }
 
     @Override
     @Transactional

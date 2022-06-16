@@ -1,6 +1,6 @@
 package ru.pycak.todolistapp.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.pycak.todolistapp.dao.TaskDAO;
 import ru.pycak.todolistapp.dao.TaskStatusDAO;
@@ -18,25 +18,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
     private final TaskDAO taskDAO;
     private final TaskStatusDAO taskStatusDAO;
     private final UserDAO userDAO;
     private final MappingUtils mappingUtils;
-
-    @Autowired
-    public TaskServiceImpl(
-            TaskDAO taskDAO,
-            TaskStatusDAO taskStatusDAO,
-            UserDAO userDAO,
-            MappingUtils mappingUtils
-    ) {
-        this.taskDAO = taskDAO;
-        this.taskStatusDAO = taskStatusDAO;
-        this.userDAO = userDAO;
-        this.mappingUtils = mappingUtils;
-    }
 
     @Override
     @Transactional
