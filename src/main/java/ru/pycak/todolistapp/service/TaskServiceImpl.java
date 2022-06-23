@@ -11,6 +11,7 @@ import ru.pycak.todolistapp.dto.TaskDTO;
 import ru.pycak.todolistapp.entity.Task;
 import ru.pycak.todolistapp.entity.TaskStatus;
 import ru.pycak.todolistapp.entity.User;
+import ru.pycak.todolistapp.exception.TaskDoesNotExistException;
 import ru.pycak.todolistapp.utils.MappingUtils;
 
 import javax.transaction.Transactional;
@@ -28,27 +29,32 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public List<ShortTaskDTO> getTasksByUser(Long id) {
-        return taskDAO.getTasksByUser(id).stream()
-                .map(mappingUtils::convertTaskToShortDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
     public TaskDTO get(Long id) {
         return mappingUtils.convertTaskToDto(taskDAO.get(id));
     }
 
     @Override
     @Transactional
-    public TaskDTO getTaskByIdAndUser(Long taskId, Long userId) {
-        return mappingUtils.convertTaskToDto(taskDAO.findByIdAndUserId(taskId, userId));
+    public List<ShortTaskDTO> find(Long userId) {
+        return taskDAO.getTasksByUser(userId).stream()
+                .map(mappingUtils::convertTaskToShortDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public TaskDTO createTask(CreateTaskDTO createTaskDTO, Long userId) {
+    public TaskDTO find(Long taskId, Long userId) {
+        return taskDAO
+                .findByIdAndUserId(taskId, userId)
+                .map(mappingUtils::convertTaskToDto)
+                .orElseThrow(() -> new TaskDoesNotExistException(
+                        "Task not found by userId="+userId+" and taskId="+taskId
+                ));
+    }
+
+    @Override
+    @Transactional
+    public TaskDTO create(CreateTaskDTO createTaskDTO, Long userId) {
         Task task = new Task();
         TaskStatus status = taskStatusDAO.get(createTaskDTO.getStatusId());
         User user = userDAO.get(userId);
@@ -66,8 +72,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDTO update(TaskDTO taskDTO) {
         Task task = taskDAO.get(taskDTO.getId());
         if (task == null) {
-            // TODO: throw new TaskDoesNotExistException()
-            return null;
+            throw new TaskDoesNotExistException("Task with id '"+taskDTO.getId()+"' does not exist.");
         }
 
         if (taskDTO.getStatusId() != null) {

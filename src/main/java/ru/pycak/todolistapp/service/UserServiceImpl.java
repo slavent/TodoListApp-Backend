@@ -7,6 +7,8 @@ import ru.pycak.todolistapp.dao.UserDAO;
 import ru.pycak.todolistapp.dto.CreateUserDTO;
 import ru.pycak.todolistapp.dto.UserDTO;
 import ru.pycak.todolistapp.entity.User;
+import ru.pycak.todolistapp.exception.UserAlreadyExistsException;
+import ru.pycak.todolistapp.exception.UserDoesNotExistException;
 
 import javax.transaction.Transactional;
 
@@ -19,13 +21,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO getUser(Long id) {
+    public UserDTO get(Long id) {
         return convertToDto(userDAO.get(id));
     }
 
     @Override
-    public UserDTO getUserByEmail(String email) {
-        return convertToDto(userDAO.findByEmail(email));
+    @Transactional
+    public UserDTO get(String email) {
+        return userDAO
+                .findByEmail(email)
+                .map(this::convertToDto)
+                .orElseThrow(() -> new UserDoesNotExistException(
+                        "User with email '"+email+"' not found"
+                ));
+    }
+
+    @Override
+    @Transactional
+    public Long getId(String email) {
+        return userDAO
+                .findByEmail(email)
+                .map(User::getId)
+                .orElseThrow(() -> new UserDoesNotExistException(
+                        "User with email '"+email+"' not found"
+                ));
     }
 
     @Override
@@ -33,8 +52,7 @@ public class UserServiceImpl implements UserService {
     public void update(UserDTO userDTO) {
         User user = userDAO.get(userDTO.getId());
         if (user == null) {
-            // TODO: throw new UserDoesNotExistException()
-            return;
+            throw new UserDoesNotExistException("User with id '"+userDTO.getId()+"' does not exists");
         }
 
         if (userDTO.getName() != null) {
@@ -52,12 +70,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO createUser(CreateUserDTO createUserDTO) {
-        if (userDAO.findByEmail(createUserDTO.getEmail()) != null) {
-            // TODO: throw new UserAlreadyExistsException()
-            System.out.println("User with this email already exists!");
-            return null;
+    public UserDTO create(CreateUserDTO createUserDTO) {
+        if (userDAO.findByEmail(createUserDTO.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("User with email '"+createUserDTO.getEmail()+"' already exists");
         }
+
         User user = new User();
         user.setName(createUserDTO.getName());
         user.setEmail(createUserDTO.getEmail());
@@ -71,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void removeUser(Long id) {
+    public void remove(Long id) {
         userDAO.remove(id);
     }
 

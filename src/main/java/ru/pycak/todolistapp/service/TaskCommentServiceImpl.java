@@ -6,6 +6,7 @@ import ru.pycak.todolistapp.dao.TaskCommentDAO;
 import ru.pycak.todolistapp.dto.CreateTaskCommentDTO;
 import ru.pycak.todolistapp.dto.TaskCommentDTO;
 import ru.pycak.todolistapp.entity.TaskComment;
+import ru.pycak.todolistapp.exception.TaskCommentNotFoundException;
 import ru.pycak.todolistapp.utils.MappingUtils;
 
 import javax.transaction.Transactional;
@@ -25,7 +26,7 @@ public class TaskCommentServiceImpl implements TaskCommentService {
 
     @Override
     @Transactional
-    public TaskCommentDTO createComment(
+    public TaskCommentDTO create(
             CreateTaskCommentDTO createTaskCommentDTO,
             Long userId,
             Long taskId
@@ -41,16 +42,18 @@ public class TaskCommentServiceImpl implements TaskCommentService {
 
     @Override
     @Transactional
-    public void removeComment(Long id) {
-        taskCommentDAO.remove(id);
+    public void remove(Long commentId) {
+        taskCommentDAO.remove(commentId);
     }
 
     @Override
     @Transactional
-    public TaskCommentDTO findByIdAndTaskIdAndUserId(Long commentId, Long taskId, Long userId) {
-        TaskComment comment = taskCommentDAO
-                .findByIdAndTaskIdAndUserId(commentId, taskId, userId);
-
-        return mappingUtils.convertTaskCommentToDto(comment);
+    public TaskCommentDTO get(Long commentId, Long taskId, Long userId) {
+        return taskCommentDAO
+                .findByIdAndTaskIdAndUserId(commentId, taskId, userId)
+                .map(mappingUtils::convertTaskCommentToDto)
+                .orElseThrow(() -> new TaskCommentNotFoundException(
+                        "Comment not found for userId="+userId+" and taskId="+taskId
+                ));
     }
 }

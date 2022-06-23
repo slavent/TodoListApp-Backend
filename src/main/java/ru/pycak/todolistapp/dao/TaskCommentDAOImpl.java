@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.pycak.todolistapp.entity.TaskComment;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @Repository
 public class TaskCommentDAOImpl implements TaskCommentDAO {
@@ -27,7 +28,7 @@ public class TaskCommentDAOImpl implements TaskCommentDAO {
     }
 
     @Override
-    public TaskComment findByIdAndTaskIdAndUserId(Long commentId, Long taskId, Long userId) {
+    public Optional<TaskComment> findByIdAndTaskIdAndUserId(Long commentId, Long taskId, Long userId) {
         return entityManager
                 .createQuery("from TaskComment where id=:commentId " +
                         "and userId=:userId and taskId=:taskId", TaskComment.class)
@@ -35,8 +36,7 @@ public class TaskCommentDAOImpl implements TaskCommentDAO {
                 .setParameter("userId", userId)
                 .setParameter("taskId", taskId)
                 .getResultStream()
-                .findAny()
-                .orElse(null);
+                .findAny();
     }
 
     @Override

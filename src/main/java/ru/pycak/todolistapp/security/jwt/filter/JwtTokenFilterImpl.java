@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.pycak.todolistapp.security.jwt.exception.JwtAuthenticationException;
+import ru.pycak.todolistapp.exception.JwtAuthenticationException;
 import ru.pycak.todolistapp.security.jwt.provider.JwtAuthenticationProvider;
 
 import javax.servlet.FilterChain;

@@ -6,6 +6,7 @@ import ru.pycak.todolistapp.entity.Task;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TaskDAOImpl implements TaskDAO {
@@ -36,14 +37,13 @@ public class TaskDAOImpl implements TaskDAO {
     }
 
     @Override
-    public Task findByIdAndUserId(Long taskId, Long userId) {
+    public Optional<Task> findByIdAndUserId(Long taskId, Long userId) {
         return entityManager
                 .createQuery("from Task where id=:taskId and user.id=:userId", Task.class)
                 .setParameter("taskId", taskId)
                 .setParameter("userId", userId)
                 .getResultStream()
-                .findAny()
-                .orElse(null);
+                .findAny();
     }
 
     @Override

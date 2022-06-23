@@ -2,6 +2,8 @@ package ru.pycak.todolistapp.dao;
 
 import ru.pycak.todolistapp.entity.TaskComment;
 
+import java.util.Optional;
+
 public interface TaskCommentDAO {
 
     /**
@@ -21,7 +23,7 @@ public interface TaskCommentDAO {
      * @param userId user identifier
      * @return TaskComment with given conditions or null
      */
-    public TaskComment findByIdAndTaskIdAndUserId(Long commentId, Long taskId, Long userId);
+    public Optional<TaskComment> findByIdAndTaskIdAndUserId(Long commentId, Long taskId, Long userId);
 
     /**
      * @param id comment unique identifier
