@@ -19,8 +19,8 @@ public class TaskDAOImpl implements TaskDAO {
     }
 
     @Override
-    public void save(Task task) {
-        entityManager.merge(task);
+    public Task save(Task task) {
+        return entityManager.merge(task);
     }
 
     @Override

@@ -1,11 +1,12 @@
 package ru.pycak.todolistapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
@@ -39,19 +40,14 @@ public class Task {
     @Column
     private Date editDate;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "userid")
     private User user;
-
-    @Column(name = "userid", insertable = false, updatable = false)
-    private Long userId;
 
     @ManyToOne
     @JoinColumn(name = "statusid")
     private TaskStatus status;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "taskid")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "task", cascade = CascadeType.REMOVE)
     private List<TaskComment> comments;
 }

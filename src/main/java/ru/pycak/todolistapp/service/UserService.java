@@ -1,7 +1,7 @@
 package ru.pycak.todolistapp.service;
 
 import ru.pycak.todolistapp.dto.CreateUserDTO;
-import ru.pycak.todolistapp.dto.UserDTO;
+import ru.pycak.todolistapp.model.UserModel;
 
 public interface UserService {
 
@@ -11,7 +11,7 @@ public interface UserService {
      * @param id User unique identifier
      * @return User instance
      */
-    public UserDTO get(Long id);
+    public UserModel get(Long id);
 
     /**
      * Get User model by email.
@@ -19,7 +19,7 @@ public interface UserService {
      * @param email User email
      * @return User instance
      */
-    public UserDTO get(String email);
+    public UserModel get(String email);
 
     /**
      * Get User id by email.
@@ -30,19 +30,19 @@ public interface UserService {
     public Long getId(String email);
 
     /**
-     * Update user if one already exists.
-     *
-     * @param user User model
-     */
-    public void update(UserDTO user);
-
-    /**
      * Add new User instance to database.
      *
      * @param createUserDTO New user DTO
      * @return Created User instance
      */
-    public UserDTO create(CreateUserDTO createUserDTO);
+    public UserModel create(CreateUserDTO createUserDTO);
+
+    /**
+     * Update user if one already exists.
+     *
+     * @param userModel User model
+     */
+    public void update(UserModel userModel);
 
     /**
      * Remove user by id.

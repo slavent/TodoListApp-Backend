@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @RequiredArgsConstructor
-public class CreateUserDTO {
+public final class CreateUserDTO {
 
     @NotBlank(message = "Name must not be empty")
     private final String name;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.pycak.todolistapp.entity.TaskComment;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,8 +19,8 @@ public class TaskCommentDAOImpl implements TaskCommentDAO {
     }
 
     @Override
-    public void save(TaskComment comment) {
-        entityManager.merge(comment);
+    public TaskComment save(TaskComment comment) {
+        return entityManager.merge(comment);
     }
 
     @Override
@@ -44,6 +45,12 @@ public class TaskCommentDAOImpl implements TaskCommentDAO {
         entityManager
                 .createQuery("delete from TaskComment where id=:taskCommentId")
                 .setParameter("taskCommentId", id)
+                .executeUpdate();
+    }
+
+    public void removeAll(List<TaskComment> commentList) {
+        entityManager
+                .createQuery("delete from TaskComment")
                 .executeUpdate();
     }
 }

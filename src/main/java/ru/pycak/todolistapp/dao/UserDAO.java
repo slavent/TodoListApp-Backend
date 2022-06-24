@@ -10,8 +10,9 @@ public interface UserDAO {
      * Save User or update if one already exists in database
      *
      * @param user User instance
+     * @return saved User instance
      */
-    public void save(User user);
+    public User save(User user);
 
     /**
      * @param id User unique identifier

@@ -11,8 +11,9 @@ public interface TaskDAO {
      * Save or update the task if one already exists in database
      *
      * @param task Task instance
+     * @return saved Task instance
      */
-    public void save(Task task);
+    public Task save(Task task);
 
     /**
      * @param id User unique identifier

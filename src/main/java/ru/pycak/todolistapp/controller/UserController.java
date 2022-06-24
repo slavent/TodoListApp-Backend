@@ -3,8 +3,10 @@ package ru.pycak.todolistapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.pycak.todolistapp.dto.ChangeUserDTO;
 import ru.pycak.todolistapp.dto.UserDTO;
 import ru.pycak.todolistapp.exception.IllegalOperationException;
+import ru.pycak.todolistapp.model.UserModel;
 import ru.pycak.todolistapp.service.UserService;
 
 @RestController
@@ -20,16 +22,20 @@ public class UserController {
 
     @GetMapping
     public UserDTO getUserProfile(Authentication authentication) {
-        return userService.get(authentication.getName());
+        UserModel model = userService.get(authentication.getName());
+        return new UserDTO(model);
     }
 
-    @PostMapping
-    public void changeUserData(Authentication authentication, @RequestBody UserDTO userDTO) {
-        UserDTO user = userService.get(authentication.getName());
-        if (!user.getId().equals(userDTO.getId())) {
-            throw new IllegalOperationException("User cannot change the data of other users");
-        }
-        userService.update(userDTO);
+    @PostMapping("/edit")
+    public void changeUserData(
+            Authentication authentication,
+            @RequestBody ChangeUserDTO changeUserDTO
+    ) {
+        Long userId = userService.getId(authentication.getName());
+        UserModel model = new UserModel();
+        model.setId(userId);
+        model.setName(changeUserDTO.getName());
+        userService.update(model);
     }
 
     @DeleteMapping
