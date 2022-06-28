@@ -3,12 +3,9 @@ package ru.pycak.todolistapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
-import ru.pycak.todolistapp.entity.Task;
-import ru.pycak.todolistapp.entity.TaskComment;
-import ru.pycak.todolistapp.entity.User;
+import ru.pycak.todolistapp.dto.*;
 import ru.pycak.todolistapp.service.TaskCommentService;
 import ru.pycak.todolistapp.service.TaskService;
-import ru.pycak.todolistapp.service.UserService;
 
 import java.util.List;
 
@@ -16,17 +13,14 @@ import java.util.List;
 @RequestMapping("/api/users/{userId}/tasks")
 public class TaskController {
 
-    private final UserService userService;
     private final TaskService taskService;
     private final TaskCommentService taskCommentService;
 
     @Autowired
     public TaskController(
-            UserService userService,
             TaskService taskService,
             TaskCommentService taskCommentService
     ) {
-        this.userService = userService;
         this.taskService = taskService;
         this.taskCommentService = taskCommentService;
     }
@@ -34,55 +28,41 @@ public class TaskController {
     // Tasks
 
     @PostMapping
-    public Task createTask(@PathVariable Long userId, @RequestBody Task task) {
-        User user = userService.getUser(userId);
-        task.setUser(user);
-        taskService.save(task);
-        return task;
+    public TaskDTO createTask(@PathVariable Long userId, @RequestBody CreateTaskDTO task) {
+        return taskService.createTask(task, userId);
     }
 
     @GetMapping
-    public List<Task> getUserTasks(@PathVariable Long userId) {
+    public List<ShortTaskDTO> getUserTasks(@PathVariable Long userId) {
         return taskService.getTasksByUser(userId);
     }
 
     @GetMapping("/{taskId}")
-    public Task getUserTaskById(@PathVariable @NonNull Long userId, @PathVariable @NonNull Long taskId) {
-        return taskService
-                .getTasksByUser(userId)
-                .stream()
-                .filter(t -> t.getId().equals(taskId))
-                .findAny()
-                .orElse(null);
+    public TaskDTO getUserTaskById(
+            @PathVariable @NonNull Long userId,
+            @PathVariable @NonNull Long taskId
+    ) {
+        return taskService.getTaskByIdAndUser(taskId, userId);
     }
 
     // Comments
 
     @PostMapping("/{taskId}/comments")
-    public TaskComment createComment(
+    public TaskCommentDTO createComment(
             @PathVariable Long userId,
             @PathVariable Long taskId,
-            @RequestBody TaskComment comment
+            @RequestBody CreateTaskCommentDTO commentDTO
     ) {
-        Task task = taskService.get(taskId);
-        task.getComments().add(comment);
-        comment.setTask(task);
-        comment.setUser(task.getUser());
-        taskService.save(task);
-        return comment;
+        return taskCommentService.createComment(commentDTO, userId, taskId);
     }
 
     @GetMapping("/{taskId}/comments/{commentId}")
-    public TaskComment getComment(
+    public TaskCommentDTO getComment(
             @PathVariable Long userId,
             @PathVariable Long taskId,
             @PathVariable Long commentId
     ) {
-        return taskService.get(taskId)
-                .getComments().stream()
-                .filter(c -> c.getId().equals(commentId))
-                .findAny()
-                .orElse(null);
+        return taskCommentService.findByIdAndTaskIdAndUserId(commentId, taskId, userId);
     }
 
     @DeleteMapping("/{taskId}/comments/{commentId}")

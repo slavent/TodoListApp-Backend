@@ -1,16 +1,9 @@
 package ru.pycak.todolistapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
-import ru.pycak.todolistapp.entity.Task;
-import ru.pycak.todolistapp.entity.TaskComment;
-import ru.pycak.todolistapp.entity.User;
-import ru.pycak.todolistapp.service.TaskCommentService;
-import ru.pycak.todolistapp.service.TaskService;
+import ru.pycak.todolistapp.dto.UserDTO;
 import ru.pycak.todolistapp.service.UserService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users/{id}/profile")
@@ -24,13 +17,13 @@ public class UserController {
     }
 
     @GetMapping
-    public User getUserProfile(@PathVariable Long id) {
+    public UserDTO getUserProfile(@PathVariable Long id) {
         return userService.getUser(id);
     }
 
     @PostMapping
-    public void changeUserData(@PathVariable Long id, @RequestBody User user) {
-        userService.update(user);
+    public void changeUserData(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        userService.update(userDTO);
     }
 
     @DeleteMapping

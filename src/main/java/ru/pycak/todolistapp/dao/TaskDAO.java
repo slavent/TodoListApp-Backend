@@ -26,6 +26,13 @@ public interface TaskDAO {
     public Task get(Long id);
 
     /**
+     * @param taskId task identifier
+     * @param userId user identifier
+     * @return Task with given conditions or null
+     */
+    public Task findByIdAndUserId(Long taskId, Long userId);
+
+    /**
      * Remove the task by its identifier
      *
      * @param id Task unique identifier

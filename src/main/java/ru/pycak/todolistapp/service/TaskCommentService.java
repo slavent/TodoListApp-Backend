@@ -1,15 +1,18 @@
 package ru.pycak.todolistapp.service;
 
-import ru.pycak.todolistapp.entity.TaskComment;
+import ru.pycak.todolistapp.dto.CreateTaskCommentDTO;
+import ru.pycak.todolistapp.dto.TaskCommentDTO;
 
 public interface TaskCommentService {
 
     /**
      * Save a comment or update if one already exists
      *
-     * @param comment TaskComment instance
+     * @param commentDTO TaskComment instance
      */
-    public void save(TaskComment comment);
+    public void save(TaskCommentDTO commentDTO);
+
+    public TaskCommentDTO createComment(CreateTaskCommentDTO createTaskCommentDTO, Long userId, Long taskId);
 
     /**
      * Remove comment by its identifier
@@ -17,4 +20,6 @@ public interface TaskCommentService {
      * @param id comment identifier
      */
     public void removeComment(Long id);
+
+    public TaskCommentDTO findByIdAndTaskIdAndUserId(Long commentId, Long taskId, Long userId);
 }
