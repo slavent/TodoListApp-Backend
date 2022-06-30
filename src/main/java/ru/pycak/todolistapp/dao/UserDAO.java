@@ -2,6 +2,8 @@ package ru.pycak.todolistapp.dao;
 
 import ru.pycak.todolistapp.entity.User;
 
+import java.util.Optional;
+
 public interface UserDAO {
 
     /**
@@ -26,7 +28,7 @@ public interface UserDAO {
 
     /**
      * @param email Email string
-     * @return First User with given email, or null.
+     * @return First User with given email, or Optional.empty().
      */
-    public User findByEmail(String email);
+    public Optional<User> findByEmail(String email);
 }

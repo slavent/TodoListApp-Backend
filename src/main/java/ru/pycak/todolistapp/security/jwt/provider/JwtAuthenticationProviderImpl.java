@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import ru.pycak.todolistapp.security.jwt.decoder.JwtTokenDecoder;
-import ru.pycak.todolistapp.security.jwt.exception.JwtAuthenticationException;
+import ru.pycak.todolistapp.exception.JwtAuthenticationException;
 import ru.pycak.todolistapp.security.jwt.resolver.JwtTokenResolver;
 
 import javax.servlet.http.HttpServletRequest;

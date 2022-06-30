@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.pycak.todolistapp.entity.User;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -35,12 +36,11 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return entityManager
                 .createQuery("from User where email=:userEmail", User.class)
                 .setParameter("userEmail", email)
                 .getResultStream()
-                .findAny()
-                .orElse(null);
+                .findAny();
     }
 }

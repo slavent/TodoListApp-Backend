@@ -31,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public UserDTO createUser(@RequestBody CreateUserDTO createUserDTO) {
-        return userService.createUser(createUserDTO);
+        return userService.create(createUserDTO);
     }
 
     @PostMapping("/login")
@@ -58,7 +58,7 @@ public class AuthController {
         DecodedJWT decodedJWT = tokenDecoder.decode(refreshToken);
         String email = decodedJWT.getSubject();
 
-        UserDTO userDTO = userService.getUserByEmail(email);
+        UserDTO userDTO = userService.get(email);
         if (userDTO == null) {
             throw new UsernameNotFoundException("User with email '"+email+"' not found in database");
         }

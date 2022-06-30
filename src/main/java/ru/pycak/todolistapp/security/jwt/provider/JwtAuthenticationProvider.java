@@ -1,7 +1,7 @@
 package ru.pycak.todolistapp.security.jwt.provider;
 
 import org.springframework.security.core.Authentication;
-import ru.pycak.todolistapp.security.jwt.exception.JwtAuthenticationException;
+import ru.pycak.todolistapp.exception.JwtAuthenticationException;
 
 import javax.servlet.http.HttpServletRequest;
 

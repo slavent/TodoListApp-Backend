@@ -3,6 +3,7 @@ package ru.pycak.todolistapp.dao;
 import ru.pycak.todolistapp.entity.Task;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskDAO {
 
@@ -30,7 +31,7 @@ public interface TaskDAO {
      * @param userId user identifier
      * @return Task with given conditions or null
      */
-    public Task findByIdAndUserId(Long taskId, Long userId);
+    public Optional<Task> findByIdAndUserId(Long taskId, Long userId);
 
     /**
      * Remove the task by its identifier
