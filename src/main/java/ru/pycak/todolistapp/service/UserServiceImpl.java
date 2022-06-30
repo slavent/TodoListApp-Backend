@@ -1,6 +1,7 @@
 package ru.pycak.todolistapp.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.pycak.todolistapp.dao.UserDAO;
 import ru.pycak.todolistapp.dto.CreateUserDTO;
@@ -10,19 +11,21 @@ import ru.pycak.todolistapp.entity.User;
 import javax.transaction.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;
-
-    @Autowired
-    public UserServiceImpl(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public UserDTO getUser(Long id) {
         return convertToDto(userDAO.get(id));
+    }
+
+    @Override
+    public UserDTO getUserByEmail(String email) {
+        return convertToDto(userDAO.findByEmail(email));
     }
 
     @Override
@@ -58,7 +61,9 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setName(createUserDTO.getName());
         user.setEmail(createUserDTO.getEmail());
-        user.setPassword(createUserDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(
+                createUserDTO.getPassword()
+        ));
 
         userDAO.save(user);
         return convertToDto(user);
