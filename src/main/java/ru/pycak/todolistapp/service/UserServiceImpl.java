@@ -3,34 +3,38 @@ package ru.pycak.todolistapp.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.pycak.todolistapp.dao.RoleDAO;
 import ru.pycak.todolistapp.dao.UserDAO;
 import ru.pycak.todolistapp.dto.CreateUserDTO;
-import ru.pycak.todolistapp.dto.UserDTO;
+import ru.pycak.todolistapp.entity.Role;
 import ru.pycak.todolistapp.entity.User;
 import ru.pycak.todolistapp.exception.UserAlreadyExistsException;
 import ru.pycak.todolistapp.exception.UserDoesNotExistException;
+import ru.pycak.todolistapp.model.UserModel;
 
 import javax.transaction.Transactional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;
+    private final RoleDAO roleDAO;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
-    public UserDTO get(Long id) {
-        return convertToDto(userDAO.get(id));
+    public UserModel get(Long id) {
+        return new UserModel(userDAO.get(id));
     }
 
     @Override
     @Transactional
-    public UserDTO get(String email) {
+    public UserModel get(String email) {
         return userDAO
                 .findByEmail(email)
-                .map(this::convertToDto)
+                .map(UserModel::new)
                 .orElseThrow(() -> new UserDoesNotExistException(
                         "User with email '"+email+"' not found"
                 ));
@@ -49,55 +53,49 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void update(UserDTO userDTO) {
-        User user = userDAO.get(userDTO.getId());
-        if (user == null) {
-            throw new UserDoesNotExistException("User with id '"+userDTO.getId()+"' does not exists");
-        }
-
-        if (userDTO.getName() != null) {
-            user.setName(userDTO.getName());
-        }
-        if (userDTO.getEmail() != null) {
-            user.setEmail(userDTO.getEmail());
-        }
-        if (userDTO.getAvatarUrl() != null) {
-            user.setAvatarUrl(userDTO.getAvatarUrl());
-        }
-
-        userDAO.save(user);
-    }
-
-    @Override
-    @Transactional
-    public UserDTO create(CreateUserDTO createUserDTO) {
+    public UserModel create(CreateUserDTO createUserDTO) {
         if (userDAO.findByEmail(createUserDTO.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("User with email '"+createUserDTO.getEmail()+"' already exists");
+            throw new UserAlreadyExistsException(
+                    "User with email '"+createUserDTO.getEmail()+"' already exists"
+            );
         }
 
+        Role roleUser = roleDAO.getRoleUser();
         User user = new User();
+        user.setRoles(Set.of(roleUser));
         user.setName(createUserDTO.getName());
         user.setEmail(createUserDTO.getEmail());
         user.setPassword(passwordEncoder.encode(
                 createUserDTO.getPassword()
         ));
 
+        return new UserModel(userDAO.save(user));
+    }
+
+    @Override
+    @Transactional
+    public void update(UserModel userModel) {
+        User user = userDAO.get(userModel.getId());
+        if (user == null) {
+            throw new UserDoesNotExistException("User with id '"+userModel.getId()+"' does not exists");
+        }
+
+        if (userModel.getName() != null) {
+            user.setName(userModel.getName());
+        }
+        if (userModel.getEmail() != null) {
+            user.setEmail(userModel.getEmail());
+        }
+        if (userModel.getAvatarUrl() != null) {
+            user.setAvatarUrl(userModel.getAvatarUrl());
+        }
+
         userDAO.save(user);
-        return convertToDto(user);
     }
 
     @Override
     @Transactional
     public void remove(Long id) {
         userDAO.remove(id);
-    }
-
-    private UserDTO convertToDto(User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getAvatarUrl()
-        );
     }
 }

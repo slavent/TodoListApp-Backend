@@ -36,9 +36,11 @@ public class TaskComment {
     @Column
     private Date editDate;
 
-    @Column(name = "taskid")
-    private Long taskId;
+    @ManyToOne
+    @JoinColumn(name = "taskid")
+    private Task task;
 
-    @Column(name = "userid")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "userid")
+    private User user;
 }

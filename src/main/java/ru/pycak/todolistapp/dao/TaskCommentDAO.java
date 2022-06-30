@@ -8,8 +8,9 @@ public interface TaskCommentDAO {
 
     /**
      * @param comment TaskComment instance
+     * @return saved TaskComment instance
      */
-    public void save(TaskComment comment);
+    public TaskComment save(TaskComment comment);
 
     /**
      * @param id comment unique identifier

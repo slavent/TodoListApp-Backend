@@ -3,17 +3,18 @@ package ru.pycak.todolistapp.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import ru.pycak.todolistapp.model.UserModel;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
-public final class CreateTaskCommentDTO {
+public class ChangeUserDTO {
 
     @NotBlank
-    private final String text;
+    private final String name;
 
     @JsonCreator
-    public CreateTaskCommentDTO(@JsonProperty String text) {
-        this.text = text;
+    ChangeUserDTO(@JsonProperty String name) {
+        this.name = name;
     }
 }
