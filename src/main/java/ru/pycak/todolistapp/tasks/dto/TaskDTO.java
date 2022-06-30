@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public final class TaskDTO {
 
     private final Long id;
-    private final Long userId;
     private final Integer statusId;
     private final String title;
     private final String description;
@@ -31,7 +30,6 @@ public final class TaskDTO {
 
     public TaskDTO(TaskModel model) {
         id = model.getId();
-        userId = model.getUserId();
         statusId = model.getStatusId();
         title = model.getTitle();
         description = model.getDescription();

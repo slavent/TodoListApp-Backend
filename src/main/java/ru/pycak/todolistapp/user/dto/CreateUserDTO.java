@@ -5,18 +5,22 @@ import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
 @RequiredArgsConstructor
 public final class CreateUserDTO {
 
-    @NotBlank(message = "Name must not be empty")
+    @NotNull
+    @NotBlank
     private final String name;
 
-    @Email(message = "Email must be valid")
+    @NotNull
+    @Email
     private final String email;
 
-    @Size(min = 8, message = "Password must be at least 8 characters length")
+    @NotNull
+    @Size(min = 8, message = "длина должна быть не менее 8 символов")
     private final String password;
 }

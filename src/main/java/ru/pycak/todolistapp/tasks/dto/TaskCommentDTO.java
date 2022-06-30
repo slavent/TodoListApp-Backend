@@ -12,7 +12,6 @@ import java.util.Date;
 public final class TaskCommentDTO {
 
     private final Long id;
-    private final Long userId;
     private final Long taskId;
     private final String text;
 
@@ -24,7 +23,6 @@ public final class TaskCommentDTO {
 
     public TaskCommentDTO(TaskCommentModel model) {
         id = model.getId();
-        userId = model.getUserId();
         taskId = model.getTaskId();
         text = model.getText();
         creationDate = model.getCreationDate();
